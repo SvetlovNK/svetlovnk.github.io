@@ -1,34 +1,29 @@
 /* Объект нужен для взаимодействи с html (добавлять элементы в список, удалять и т.д.) */
-import { createElement } from './helpers';
+import { createElement, EventEmitter } from './helpers';
 
-class View {
+class View extends EventEmitter {
     constructor() {
+        super();
+
         this.form = document.getElementById('todo-form');
         this.input = document.getElementById('add-input');
         this.list = document.getElementById('todo-list');
+
+        this.form.addEventListener('submit', this.handleAdd.bind(this));
     }
 
     createElement(todo) {
-        const checkbox = createElement('input', {
-            type: 'checkbox',
-            className: 'checkbox',
-            checked: todo.completed ? 'checked' : ''
-        });
-        const label = createElement('labe;', {className: 'title'}, todo.title);
+        const checkbox = createElement('input', { type: 'checkbox', className: 'checkbox',checked: todo.completed ? 'checked' : ''});
+        const label = createElement('label', {className: 'title'}, todo.title);
         const editInput = createElement('input', {className: 'textfield'});
         const editButton = createElement('button', {className: 'edit'}, 'Изменить');
         const removeButton = createElement('button', {className: 'remove'}, 'Удалить');
-        const item = createElement('li', {
-            className: 'todo-item${todo.completed ? '
-            completed' : '
-            '}',
-            'data-id': todo.id
-        }, checkbox, label, editInput, editButton, removeButton);
+        const item = createElement('li', {className: `todo-item${todo.completed ? ' completed' : ''}`, 'data-id': todo.id}, checkbox, label, editInput, editButton, removeButton);
 
         return this.addEventListeners(item);
     };
 
-    addEventListeners(item) {
+    addEventListeners(listItem) {
         const checkBox = listItem.querySelector('.checkbox');
         const editButton = listItem.querySelector('button.edit');
         const removeButton = listItem.querySelector('button.remove');
@@ -37,7 +32,50 @@ class View {
         editButton.addEventListener('click', this.handleEdit.bind(this));
         removeButton.addEventListener('click', this.handleRemove.bind(this));
 
-        return item;
+        return listItem;
+    }
+
+    handleAdd(event) {
+        event.preventDefault();
+
+        if (!this.input.value) return alert('Необходимо ввести название задачи!');
+
+        const value = this.input.value;
+
+        this.emit('add', value);
+    }
+
+    handleToggle ({ target }) {
+        const listItem = target.parentNode;
+        const id = listItem.getAttribute('data-id');
+        const completed = target.checked;
+
+        this.emit('toggle', { id, completed });
+    }
+
+    handleEdit({ target }) {
+        const listItem = target.parentNode;
+        const id = listItem.getAttribute('data-id');
+        const label = listItem.querySelector('.title');
+        const input = listItem.querySelector('.textfield');
+        const editButton = listItem.querySelector('button.edit');
+        const title = input.value;
+        const isEditing = listItem.classList.contains('editing');
+
+        if (isEditing) {
+            this.emit('edit', { id, title });
+        } else {
+            input.value = label.textContent;
+            editButton.textContent = 'Сохранить';
+            listItem.classList.add('editing');
+        }
+    }
+
+    handleRemove({ target }) {
+        const listItem = target.parentNode;
+        const id = listItem.getAttribute('data-id');
+
+        this.emit('remove', id);
     }
 
     findListItem(id) {
@@ -76,7 +114,7 @@ class View {
     }
 
     removeItem(id) {
-        const listItem = this.findListItem(todo.id);
+        const listItem = this.findListItem(id);
 
         this.list.removeChild(listItem);
     }
