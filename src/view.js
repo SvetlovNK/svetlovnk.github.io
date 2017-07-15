@@ -29,6 +29,22 @@ class View extends EventEmitter {
     }
 
     handleEdit({ target }) {
+        const listItem = target.parentNode;
+        const id = listItem.getAttribute('data-id');
+        const lable = listItem.querySelector('.title');
+        const input = listItem.querySelector('.textfield');
+        const editButton = listItem.querySelector('.edit');
+        const title = input.value;
+
+        const editind = listItem.classList.contains('editing');
+
+        if (editind) {
+            this.emit('edit', { id, title });
+        } else {
+            input.value = lable.textContent;
+            listItem.classList.add('editing');
+            editButton.textContent = 'Сохранить';
+        }
     }
 
     handleRemove() {
@@ -81,6 +97,19 @@ class View extends EventEmitter {
         } else {
             listItem.classList.remove('completed');
         }
+
+    }
+
+    editItem(todo) {
+        const listItem = this.findListItem(todo.id);
+        const label = listItem.querySelector('.title');
+        const input = listItem.querySelector('.textfield');
+        const editButton = listItem.querySelector('.edit');
+
+        label.textContent = todo.title;
+        editButton.textContent = 'Изменить';
+        listItem.classList.remove('editing');
+
 
     }
 
