@@ -42,6 +42,6 @@ function load() {
     const data = JSON.parse(string);
 
     return data;
-
+}
 
 export { createElement, EventEmitter, save, load };

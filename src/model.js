@@ -6,6 +6,12 @@ class Model extends EventEmitter {
 
         this.items = items;
     }
+
+    addItem(item) {
+        this.items.push(item);
+
+        return item;
+    }
 }
 
 export default Model;
