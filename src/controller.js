@@ -4,6 +4,7 @@ class Controller {
         this.view = view;
 
         view.on('add', this.addTodo.bind(this));
+        view.on('toggle', this.toggleTodo.bind(this));
     }
 
     addTodo(title) {
@@ -11,9 +12,15 @@ class Controller {
             id: Date.now(),
             title,
             completed: false
-        })
+        });
 
         this.view.addItem(item);
+    }
+
+    toggleTodo({ id, completed }) {
+        const item = this.model.updateItem(id, { completed });
+
+        this.view.toggleItem(item);
     }
 }
 
