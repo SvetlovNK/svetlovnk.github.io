@@ -24,6 +24,16 @@ class Model extends EventEmitter {
 
         return item;
     }
+
+    removeItem(id) {
+        var item = this.items.find(item => item.id == id);
+        var index = this.items.indexOf(item);
+
+        if (index > -1) {
+            this.items.splice(index, 1);
+        }
+
+    }
 }
 
 export default Model;

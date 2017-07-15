@@ -47,8 +47,11 @@ class View extends EventEmitter {
         }
     }
 
-    handleRemove() {
+    handleRemove({ target }) {
+        const listItem = target.parentNode;
+        const id = listItem.getAttribute('data-id');
 
+        this.emit('remove', id);
     }
 
     bindEvents(item) {
@@ -109,10 +112,13 @@ class View extends EventEmitter {
         label.textContent = todo.title;
         editButton.textContent = 'Изменить';
         listItem.classList.remove('editing');
-
-
     }
 
+    removeItem(id) {
+        const listItem = this.findListItem(id);
+
+        this.list.removeChild(listItem);
+    }
 }
 
 export default View;

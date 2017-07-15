@@ -6,6 +6,7 @@ class Controller {
         view.on('add', this.addTodo.bind(this));
         view.on('toggle', this.toggleTodo.bind(this));
         view.on('edit', this.editTodo.bind(this));
+        view.on('remove', this.removeTodo.bind(this));
     }
 
     addTodo(title) {
@@ -28,6 +29,11 @@ class Controller {
         const item = this.model.updateItem(id, { title });
 
         this.view.editItem(item);
+    }
+
+    removeTodo(id) {
+        this.model.removeItem(id);
+        this.view.removeItem(id);
     }
 }
 
