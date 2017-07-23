@@ -39,15 +39,15 @@ class EventEmitter {
 
 function save(data) {
     const string = JSON.stringify(data);
-
     localStorage.setItem('todos', string);
 }
 
 function load() {
     const string = localStorage.getItem('todos');
-    const data = JSON.parse(string);
+    const todoList = JSON.parse(string);
+    console.log(todoList);
+    return todoList;
 
-    return data;
 }
 
 export { createElement, EventEmitter, save, load };

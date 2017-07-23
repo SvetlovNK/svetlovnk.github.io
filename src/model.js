@@ -13,7 +13,7 @@ class Model extends EventEmitter {
 
     addItem(item) {
         this.items.push(item);
-
+        this.emit('change', this.items);
         return item;
     }
 
@@ -21,16 +21,18 @@ class Model extends EventEmitter {
         const item = this.getItem(id);
 
         Object.keys(data).forEach(prop => item[prop] = data[prop]);
+        this.emit('change', this.items);
 
         return item;
     }
 
     removeItem(id) {
-        var item = this.items.find(item => item.id == id);
-        var index = this.items.indexOf(item);
+        const item = this.items.find(item => item.id == id);
+        const index = this.items.indexOf(item);
 
         if (index > -1) {
             this.items.splice(index, 1);
+            this.emit('change', this.items);
         }
 
     }

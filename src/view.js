@@ -119,6 +119,14 @@ class View extends EventEmitter {
 
         this.list.removeChild(listItem);
     }
+
+    show(todos) {
+        todos.forEach(todo => {
+            const listItem = this.createListItem(todo);
+
+            this.list.appendChild(listItem);
+        })
+    }
 }
 
 export default View;
