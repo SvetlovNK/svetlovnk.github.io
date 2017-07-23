@@ -5,7 +5,7 @@ import { save, load } from './helpers';
 
 const state = load();
 
-const model = new Model(state);
+const model = new Model(state || undefined);
 model.on('change', state => save(state));
 
 const view = new View();
