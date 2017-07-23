@@ -1,3 +1,8 @@
+/** Функция createElement для создания DOM элементов, где tag - название тэга, props - св-ва тэга (класс, id, data и т.д.),
+ *  а в children передается массив, который может быть как значением тега (например название кнопки), так и
+ *  внутренними элементами.
+ * **/
+
 function createElement(tag, props, ...children) {
     const element = document.createElement(tag);
 
